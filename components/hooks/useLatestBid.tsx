@@ -3,7 +3,6 @@ import useSWR from 'swr'
 
 export function useLatestBid(jobId: string, isExpired: boolean) {
   const params = new URLSearchParams()
-  params.append('jobId', jobId)
 
   const options = isExpired ? {} : { refreshInterval: 500 }
 

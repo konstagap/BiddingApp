@@ -9,8 +9,6 @@ type Props = {
 } & React.InputHTMLAttributes<HTMLInputElement>
 
 const InputField = React.forwardRef(({ label, error, type = 'text', id, ...rest }: Props, ref: React.ForwardedRef<HTMLInputElement>) => {
-  // console.log('rest', rest)
-  // console.log('error', error)
   return (
     <div
       className={cn('form-control w-full max-w-lg', {

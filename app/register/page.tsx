@@ -2,6 +2,7 @@
 import InputField from '@/components/InputField'
 import SubmitButton from '@/components/SubmitButton'
 import { TregisterSchema, registerValidationSchema } from '@/lib/types'
+import { registerUser } from '@/lib/services/userService'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -12,34 +13,14 @@ const Register = (props: {}) => {
   const {
     register,
     handleSubmit,
-
     formState: { errors, isSubmitting },
     setError
-  } = useForm<TregisterSchema>({
-    resolver: yupResolver(registerValidationSchema)
-  })
+  } = useForm<TregisterSchema>({ resolver: yupResolver(registerValidationSchema) })
 
-  async function onSubmit({ email, password }: TregisterSchema) {
+  async function onSubmit(form: TregisterSchema) {
     try {
       if (isSubmitting) return
-
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        body: JSON.stringify({ email, password })
-      })
-
-      if (!res.ok) {
-        const error = new Error()
-        if (res.status === 400) {
-          error.message = await res.text()
-        } else {
-          error.message = res.statusText
-        }
-        throw error
-      }
-
+      await registerUser(form)
       router.replace('/login')
     } catch (error: any) {
       setError('email', {

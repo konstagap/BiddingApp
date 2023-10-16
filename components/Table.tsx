@@ -1,7 +1,8 @@
 import { cn } from '@/lib/tw-merge'
 import type { JobPost } from '@/lib/types'
+import { add24Hours, getZeroTimeDate, isJobExpired } from '@/lib/utils'
 import Link from 'next/link'
-import React from 'react'
+import CountDown from './CountDown'
 
 type Props = {
   items: JobPost[]
@@ -15,18 +16,9 @@ const Table = ({ items, heading, showBids, classsName = 'border-cyan-400' }: Pro
 
   if (showBids) th.unshift('Total Bids 🔥')
 
-  const get24hrFromTimestamp = (timestamp: Date) => {
-    const date = new Date(timestamp)
-    date.setHours(date.getHours() + 24)
-    return date.toLocaleString()
-  }
-
   function ts(str: string) {
-    if (str.length > 15) {
-      return str.slice(0, 15) + '...'
-    } else {
-      return str
-    }
+    const MAX_CHARS_IN_ROW = 15 // truncate string if more than 15 chars
+    return str.length > MAX_CHARS_IN_ROW ? str.slice(0, MAX_CHARS_IN_ROW) + '...' : str
   }
 
   return (
@@ -34,7 +26,6 @@ const Table = ({ items, heading, showBids, classsName = 'border-cyan-400' }: Pro
       <h2 className='text-2xl text-slate-300 font-bold'>{heading}</h2>
       <div className={cn('overflow-x-auto border rounded-md p-2 my-2', classsName)}>
         <table className='table '>
-          {/* head */}
           <thead>
             <tr>
               {th.map((key) => (
@@ -43,15 +34,17 @@ const Table = ({ items, heading, showBids, classsName = 'border-cyan-400' }: Pro
             </tr>
           </thead>
           <tbody>
-            {items.map((posting) => (
-              <tr key={posting.id} className='hover'>
-                {showBids && <td className='text-red-400'>{posting.count}</td>}
-                <td>{ts(posting.name)}</td>
-                <td>{ts(posting.contact)}</td>
-                <td>{ts(posting.description)}</td>
-                <td>{get24hrFromTimestamp(posting.createdAt)}</td>
+            {items.map((job) => (
+              <tr key={job.id} className='hover'>
+                {showBids && <td className='text-red-400'>{job.count}</td>}
+                <td>{ts(job.name)}</td>
+                <td>{ts(job.contact)}</td>
+                <td>{ts(job.description)}</td>
                 <td>
-                  <Link href={`/post/${posting.id}`} className='btn btn-active btn-link'>
+                  {isJobExpired(job.createdAt) ? <CountDown expiresAt={getZeroTimeDate()} /> : <CountDown expiresAt={add24Hours(job.createdAt)} />}
+                </td>
+                <td>
+                  <Link href={`/post/${job.id}`} className='btn btn-active btn-link'>
                     details
                   </Link>
                 </td>

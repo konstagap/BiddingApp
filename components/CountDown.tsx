@@ -1,4 +1,5 @@
 'use client'
+import { cn } from '@/lib/tw-merge'
 import React, { memo, useEffect, useState } from 'react'
 
 type Props = {
@@ -11,25 +12,18 @@ function CountDown({ expiresAt }: Props) {
     m: expiresAt.getMinutes(),
     s: expiresAt.getSeconds()
   })
-
-  console.log('count', count)
+  const isExpired = Object.values(count).every((v) => v === 0)
 
   useEffect(() => {
-    const id = setInterval(() => {
-      if (Object.values(count).every((v) => v === 0)) return clearInterval(id)
-      if (count.h > 0) {
-        setCount(() => ({ ...count, h: count.h - 1 }))
-        document.getElementById('counterElementH').style.setProperty('--value', count.h)
-      }
+    if (isExpired) return
 
-      if (count.m > 0) {
-        setCount(() => ({ ...count, m: count.m - 1 }))
-        document.getElementById('counterElementM').style.setProperty('--value', count.m)
-      }
-
+    const id: ReturnType<typeof setInterval> = setInterval(() => {
       if (count.s > 0) {
         setCount(() => ({ ...count, s: count.s - 1 }))
-        document.getElementById('counterElementS').style.setProperty('--value', count.s)
+      } else if (count.s === 0 && count.m > 0) {
+        setCount(() => ({ ...count, m: count.m - 1, s: 59 }))
+      } else if (count.s === 0 && count.m === 0 && count.h > 0) {
+        setCount(() => ({ h: count.h - 1, m: 59, s: 59 }))
       }
     }, 1000)
 
@@ -37,14 +31,14 @@ function CountDown({ expiresAt }: Props) {
   }, [count])
 
   return (
-    <span className='countdown font-mono text-2xl'>
-      <span id='counterElementH' style={{ '--value': count.h }}></span>h<span id='counterElementM' style={{ '--value': count.m }}></span>m
-      <span id='counterElementS' style={{ '--value': count.s }}></span>s
+    <span className={cn('countdown font-mono text-2xl', { 'text-error': isExpired })}>
+      <span style={{ '--value': count.h } as React.CSSProperties}></span>h<span style={{ '--value': count.m } as React.CSSProperties}></span>m
+      <span style={{ '--value': count.s } as React.CSSProperties}></span>s
     </span>
   )
 }
 
-export default memo(CountDown)
+export default memo(CountDown, arePropsEqual)
 
 function arePropsEqual(oldProps: Props, newProps: Props) {
   return oldProps.expiresAt === newProps.expiresAt

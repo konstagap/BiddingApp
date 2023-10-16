@@ -6,6 +6,8 @@ export interface User {
   email: string
 }
 
+export type Role = 'BIDDER' | 'POSTER'
+
 export interface JobPost {
   id: string
   bid: number
@@ -47,7 +49,7 @@ export const registerValidationSchema = yup
 
 export type TregisterSchema = yup.InferType<typeof registerValidationSchema>
 
-export const postValidationSchema = yup
+export const jobValidationSchema = yup
   .object()
   .shape({
     description: yup.string().test('not more than 16kb', 'Text could not be more than 16kb', checkSizeInKb).required(),
@@ -58,4 +60,4 @@ export const postValidationSchema = yup
   })
   .required()
 
-export type TpostSchema = yup.InferType<typeof postValidationSchema>
+export type TjobSchema = yup.InferType<typeof jobValidationSchema>

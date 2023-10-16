@@ -2,7 +2,8 @@
 import InputField from '@/components/InputField'
 import SubmitButton from '@/components/SubmitButton'
 import TextareaField from '@/components/TextareaField'
-import { TpostSchema, postValidationSchema } from '@/lib/types'
+import { createJob } from '@/lib/services/jobService'
+import { TjobSchema, jobValidationSchema } from '@/lib/types'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -15,28 +16,16 @@ const Create = () => {
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful },
     setError
-  } = useForm<TpostSchema>({
-    resolver: yupResolver(postValidationSchema)
+  } = useForm<TjobSchema>({
+    resolver: yupResolver(jobValidationSchema)
   })
 
-  async function onSubmit({ bid, description, name, requirements, contact }: TpostSchema) {
+  async function onSubmit(form: TjobSchema) {
     try {
       if (isSubmitting) return
 
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      const res = await fetch('/api/post', {
-        method: 'POST',
-        body: JSON.stringify({ bid, description, name, requirements, contact })
-      })
-
-      if (!res.ok) {
-        throw new Error('Something went wrong.' + res.status)
-      }
-
-      const data = await res.json()
-
-      console.log('data', data)
+      const data = await createJob(form)
+      window.scrollTo(0, 0)
 
       setTimeout(() => router.replace(`/post/${data.id}`), 3000)
     } catch (error: any) {

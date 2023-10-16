@@ -1,13 +1,11 @@
 'use client'
 import { cn } from '@/lib/tw-merge'
-import React from 'react'
-import { useLatestBid } from './hooks/useLatestBid'
-import useSWRMutation from 'swr/mutation'
-import { useSetLowesttBid } from './hooks/useSetLowerBid'
+import { isJobExpired } from '@/lib/utils'
 import { useSession } from 'next-auth/react'
-import { isJobExpired, twentyFourHoursinMs } from '@/lib/utils'
 import Link from 'next/link'
 import { useBidder } from './context/RoleProvider'
+import { useLatestBid } from './hooks/useLatestBid'
+import { useSetLowesttBid } from './hooks/useSetLowerBid'
 
 type Props = {
   job: {
@@ -26,29 +24,34 @@ type Props = {
 export const BiddingSection = ({ job }: Props) => {
   const { isBidder, error } = useBidder()
 
-  console.log('isBidder, error', isBidder)
+  const showMessageOrEnded = (str: string) => {
+    return cn({
+      [str]: !isJobExpired(job.createdAt),
+      ['🏁 Bidding ended']: isJobExpired(job.createdAt)
+    })
+  }
 
   if (error)
     return (
       <li className='flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6'>
         <div className='ml-4 flex-shrink-0'>
           <Link href='/login' className='font-medium text-accent btn'>
-            Login to place a bid
+            {showMessageOrEnded('Login to place a bid')}
           </Link>
         </div>
       </li>
     )
 
-  if (isBidder) return <PlaceAbid job={job} />
-
   if (!isBidder)
     return (
       <>
         <li className='flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6'>
-          <div className='ml-4 flex-shrink-0'>You are currently not a Bidder</div>
+          <div className='ml-4 flex-shrink-0'>{showMessageOrEnded('You are currently not a Bidder')}</div>
         </li>
       </>
     )
+
+  if (isBidder) return <PlaceAbid job={job} />
 }
 
 function PlaceAbid({ job }: Props) {
@@ -57,8 +60,6 @@ function PlaceAbid({ job }: Props) {
 
   const session = useSession()
 
-  console.log('data', data)
-
   const lowestBid = data?.bid?.bid ?? job.bid
 
   async function setLowerBid() {
@@ -66,10 +67,12 @@ function PlaceAbid({ job }: Props) {
       const result = await trigger({ jobId: job.id, currentBid: lowestBid })
     } catch (e) {
       // error handling
+      // show that bid didnt pass, maybe toast will be good
     }
   }
 
   const youWinning = session.data?.user?.email === data?.bid?.user?.email
+  const isExpired = isJobExpired(job.createdAt)
 
   return (
     <>
@@ -86,20 +89,23 @@ function PlaceAbid({ job }: Props) {
       <li className='flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6'>
         <div className='flex w-full justify-start'>
           {youWinning && (
-            <span
-              className={cn('btn btn-outline', {
-                'btn-success': true,
-                'btn-secondary': false
-              })}>
-              You are winning
+            <span className={'btn btn-outline btn-success'}>
+              {cn({
+                'You are winning': youWinning && !isExpired,
+                'You won!': youWinning && isExpired
+              })}
             </span>
           )}
         </div>
-        <div className='flex w-full justify-end'>
-          <button className='btn btn-outline btn-warning' disabled={isMutating} onClick={setLowerBid}>
-            Place a bid
-          </button>
-        </div>
+        {isExpired ? (
+          <span className={'btn btn-outline btn-disabled'}>🏁 Ended</span>
+        ) : (
+          <div className='flex w-full justify-end'>
+            <button className='btn btn-outline btn-warning' disabled={isMutating} onClick={setLowerBid}>
+              Place a bid
+            </button>
+          </div>
+        )}
       </li>
     </>
   )

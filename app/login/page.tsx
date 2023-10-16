@@ -2,11 +2,12 @@
 import InputField from '@/components/InputField'
 import SubmitButton from '@/components/SubmitButton'
 import { TloginSchema, loginValidationSchema } from '@/lib/types'
+import { signInUser } from '@/lib/services/userService'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { signIn, useSession } from 'next-auth/react'
 
 const Login = (props: {}) => {
   const { data: session } = useSession()
@@ -17,24 +18,14 @@ const Login = (props: {}) => {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError
-  } = useForm<TloginSchema>({
-    resolver: yupResolver(loginValidationSchema)
-  })
+  } = useForm<TloginSchema>({ resolver: yupResolver(loginValidationSchema) })
 
   if (session?.user) return router.replace('/')
 
-  async function onSubmit({ email, password }: TloginSchema) {
+  async function onSubmit(form: TloginSchema) {
     try {
       if (isSubmitting) return
-
-      const res = await signIn('credentials', {
-        email,
-        password,
-        redirect: true,
-        callbackUrl: '/'
-      })
-
-      if (res?.error) throw new Error(res.error)
+      await signInUser(form)
     } catch (error: any) {
       setError('email', {
         type: 'server',

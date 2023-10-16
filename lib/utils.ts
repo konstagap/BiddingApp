@@ -30,3 +30,9 @@ export function add24Hours(date: Date | string) {
 
   return newDate
 }
+
+export const getZeroTimeDate = () => {
+  const zeroTime = new Date()
+  zeroTime.setHours(0, 0, 0, 0)
+  return zeroTime
+}

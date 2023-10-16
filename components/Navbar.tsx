@@ -8,7 +8,6 @@ type Props = {}
 
 async function Navbar({}: Props) {
   const session = await auth()
-  console.log('session', session)
   const user = session?.user
 
   return (

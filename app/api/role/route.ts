@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '../auth/[...nextauth]/route'
+import { Role } from '@prisma/client'
 
 export async function PUT(req: NextRequest) {
   const session = await auth()
@@ -9,7 +10,7 @@ export async function PUT(req: NextRequest) {
   const body = await req.json()
 
   const { role } = body
-  const options = ['BIDDER', 'POSTER']
+  const options: Role[] = ['BIDDER', 'POSTER']
 
   if (!role || !options.includes(role)) return new NextResponse('Missing Fields', { status: 400 })
 

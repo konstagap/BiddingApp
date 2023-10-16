@@ -1,10 +1,12 @@
 'use client'
+import { getRole, updateRole } from '@/lib/services/userService'
+import { Role } from '@prisma/client'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 type RoleState = {
   loading: boolean
   error: ''
-  role: 'BIDDER' | 'POSTER'
+  role: Role
 }
 
 type ContextType = {
@@ -20,28 +22,16 @@ export const RoleContextProvider = ({ children }: { children: React.ReactNode })
   const [roleState, setRoleState] = useState<RoleState>({ loading: false, error: '', role: 'POSTER' })
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await fetch('/api/role')
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || 'Something went wrong')
-        console.log('data', data)
-        setRoleState((prev) => ({ ...prev, role: data.role, loading: false }))
-      } catch (error: any) {
-        setRoleState((prev) => ({ ...prev, error: error.message, loading: false }))
-      }
-    })()
+    getRole()
+      .then((data) => setRoleState((prev) => ({ ...prev, role: data.role, loading: false })))
+      .catch((error: any) => setRoleState((prev) => ({ ...prev, error: error.message, loading: false })))
   }, [])
 
   async function changeRole() {
     try {
       setRoleState((prev) => ({ ...prev, error: '', loading: false }))
       const newRole = roleState.role === 'BIDDER' ? 'POSTER' : 'BIDDER'
-      const res = await fetch('/api/role', {
-        method: 'PUT',
-        body: JSON.stringify({ role: newRole })
-      })
-      if (!res.ok) throw new Error('Something went wrong')
+      await updateRole(newRole)
       setRoleState((prev) => ({ ...prev, role: newRole, loading: false }))
     } catch (error: any) {
       console.log('error', error?.message)
