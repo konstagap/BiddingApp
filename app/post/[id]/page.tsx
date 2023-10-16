@@ -25,8 +25,12 @@ export default async function Posting({ params }: Props) {
       value: job.name
     },
     {
-      label: 'Job Description',
+      label: 'Description',
       value: job.description
+    },
+    {
+      label: 'Requirements',
+      value: job.requirements
     },
     {
       label: 'Contact information',
@@ -37,17 +41,14 @@ export default async function Posting({ params }: Props) {
       value: job.createdAt.toLocaleString()
     },
     {
-      label: 'Expires',
+      label: 'Expires at',
       value: add24Hours(job.createdAt).toLocaleString()
     },
     {
-      label: 'Countdown',
+      label: 'Time left',
       value: <CountDown expiresAt={isExpired ? getZeroTimeDate() : add24Hours(job.createdAt)} />
     },
-    {
-      label: 'Job requirements',
-      value: job.requirements
-    },
+
     {
       label: 'Activity',
       custom: true,
@@ -91,6 +92,6 @@ export default async function Posting({ params }: Props) {
 const DetailsRow = ({ label, value, custom = false }: { label: ReactNode; value: ReactNode; custom?: boolean }) => (
   <div className='px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0'>
     <dt className='text-sm font-medium leading-6 '>{label}</dt>
-    {custom ? value : <dd className='mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 break-words '>{value}</dd>}
+    {custom ? value : <dd className='mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 break-words max-h-40 overflow-y-scroll'>{value}</dd>}
   </div>
 )
