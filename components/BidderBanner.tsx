@@ -8,7 +8,7 @@ import { cn } from '@/lib/tw-merge'
 type Props = { user: { email: string } }
 
 function BidderBanner({ user }: Props) {
-  const { isBidder } = useBidder()
+  const { isBidder, role } = useBidder()
 
   return (
     <div className='alert border border-info mb-4'>
@@ -23,7 +23,7 @@ function BidderBanner({ user }: Props) {
         <div className='text-sm'>You can change role it by clicking on avatar</div>
         <div className='text-sm'>Bidder can bid on jobs while Poster can creat a job</div>
       </div>
-      {isBidder ? null : (
+      {role !== 'POSTER' ? null : (
         <Link href='/create' className='btn btn-sm lg:btn-md btn-accent'>
           Create new Job
         </Link>

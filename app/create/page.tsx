@@ -2,6 +2,7 @@
 import InputField from '@/components/InputField'
 import SubmitButton from '@/components/SubmitButton'
 import TextareaField from '@/components/TextareaField'
+import { useBidder } from '@/components/context/RoleProvider'
 import { TjobSchema, jobValidationSchema } from '@/lib/types'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Link from 'next/link'
@@ -10,6 +11,9 @@ import { useForm } from 'react-hook-form'
 
 const Create = () => {
   const router = useRouter()
+  const { role } = useBidder()
+  if (role !== 'POSTER') router.replace('/')
+
   const {
     register,
     handleSubmit,
@@ -41,6 +45,8 @@ const Create = () => {
       })
     }
   }
+
+  if (role !== 'POSTER') return null
 
   return (
     <div className='flex flex-col justify-center px-6 lg:px-8'>

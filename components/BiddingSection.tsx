@@ -23,7 +23,7 @@ type Props = {
 }
 
 export const BiddingSection = ({ job }: Props) => {
-  const { isBidder, error } = useBidder()
+  const { isBidder, role, error } = useBidder()
 
   const showMessageOrEnded = (str: string) => {
     return cn({
@@ -32,7 +32,7 @@ export const BiddingSection = ({ job }: Props) => {
     })
   }
 
-  if (error)
+  if (role === undefined || error)
     return (
       <li className='flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6'>
         <div className='ml-4 flex-shrink-0'>

@@ -31,7 +31,7 @@ export const registerUser = async ({ email, password }: TregisterSchema) => {
   return res
 }
 
-export const logOut = () => signOut()
+export const logOut = () => signOut().then(() => window.location.replace('/'))
 
 export const getRole = async () => {
   const res = await fetch('/api/role')

@@ -6,11 +6,12 @@ import { createContext, useContext, useEffect, useState } from 'react'
 type RoleState = {
   loading: boolean
   error: ''
-  role: Role
+  role: Role | undefined
 }
 
 type ContextType = {
   isBidder: boolean
+  role: Role | undefined
   changeRole: () => void
   loading: boolean
   error: string
@@ -19,7 +20,7 @@ type ContextType = {
 const RoleContext = createContext<ContextType>({} as ContextType)
 
 export const RoleContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [roleState, setRoleState] = useState<RoleState>({ loading: false, error: '', role: 'POSTER' })
+  const [roleState, setRoleState] = useState<RoleState>({ loading: false, error: '', role: undefined })
 
   useEffect(() => {
     getRole()
@@ -40,7 +41,8 @@ export const RoleContextProvider = ({ children }: { children: React.ReactNode })
   }
 
   return (
-    <RoleContext.Provider value={{ isBidder: roleState.role === 'BIDDER', changeRole, loading: roleState.loading, error: roleState.error }}>
+    <RoleContext.Provider
+      value={{ isBidder: roleState.role === 'BIDDER', role: roleState.role, changeRole, loading: roleState.loading, error: roleState.error }}>
       {children}
     </RoleContext.Provider>
   )
