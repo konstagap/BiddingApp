@@ -2,7 +2,6 @@
 import InputField from '@/components/InputField'
 import SubmitButton from '@/components/SubmitButton'
 import TextareaField from '@/components/TextareaField'
-import { createJob } from '@/lib/services/jobService'
 import { TjobSchema, jobValidationSchema } from '@/lib/types'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Link from 'next/link'
@@ -24,7 +23,14 @@ const Create = () => {
     try {
       if (isSubmitting) return
 
-      const data = await createJob(form)
+      const res = await fetch('/api/post', {
+        method: 'POST',
+        body: JSON.stringify(form)
+      })
+
+      if (!res.ok) throw new Error('Something went wrong.' + res.status)
+
+      const data = await res.json()
       window.scrollTo(0, 0)
 
       setTimeout(() => router.replace(`/post/${data.id}`), 3000)

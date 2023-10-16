@@ -1,17 +1,6 @@
 import { prisma } from '../db/prisma'
 import { TjobSchema } from '../types'
 
-export const createJob = async ({ bid, description, name, requirements, contact }: TjobSchema) => {
-  const res = await fetch('/api/post', {
-    method: 'POST',
-    body: JSON.stringify({ bid, description, name, requirements, contact })
-  })
-
-  if (!res.ok) throw new Error('Something went wrong.' + res.status)
-
-  return await res.json()
-}
-
 export const get10LatestJobs = async () => {
   return prisma.job.findMany({
     take: 10,
