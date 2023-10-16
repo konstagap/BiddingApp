@@ -3,19 +3,18 @@ import { cn } from '@/lib/tw-merge'
 import React, { memo, useEffect, useState } from 'react'
 
 type Props = {
+  expired?: boolean
   expiresAt: Date
 }
 
-function CountDown({ expiresAt }: Props) {
+function CountDown({ expiresAt, expired = false }: Props) {
   const [count, setCount] = useState({
-    h: expiresAt.getHours(),
-    m: expiresAt.getMinutes(),
-    s: expiresAt.getSeconds()
+    h: expired ? 0 : expiresAt.getHours(),
+    m: expired ? 0 : expiresAt.getMinutes(),
+    s: expired ? 0 : expiresAt.getSeconds()
   })
-  const isExpired = Object.values(count).every((v) => v === 0)
 
-  console.log('count', count)
-  console.log('isExpired', isExpired)
+  const isExpired = expired || Object.values(count).every((v) => v === 0)
 
   useEffect(() => {
     if (isExpired) return

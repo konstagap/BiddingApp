@@ -41,7 +41,7 @@ const Table = ({ items, heading, showBids, classsName = 'border-cyan-400' }: Pro
                 <td>{ts(job.contact)}</td>
                 <td>{ts(job.description)}</td>
                 <td>
-                  {isJobExpired(job.createdAt) ? <CountDown expiresAt={getZeroTimeDate()} /> : <CountDown expiresAt={add24Hours(job.createdAt)} />}
+                  <CountDown expiresAt={add24Hours(job.createdAt)} expired={isJobExpired(job.createdAt)} />
                 </td>
                 <td>
                   <Link href={`/post/${job.id}`} className='btn btn-active btn-link'>

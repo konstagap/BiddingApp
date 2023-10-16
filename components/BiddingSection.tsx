@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useBidder } from './context/RoleProvider'
 import { useLatestBid } from './hooks/useLatestBid'
 import { useSetLowesttBid } from './hooks/useSetLowerBid'
+import debounce from 'lodash/debounce'
 
 type Props = {
   job: {
@@ -62,14 +63,14 @@ function PlaceAbid({ job }: Props) {
 
   const lowestBid = data?.bid?.bid ?? job.bid
 
-  async function setLowerBid() {
+  const debouncedSetLowerBid = debounce(async () => {
     try {
       const result = await trigger({ jobId: job.id, currentBid: lowestBid })
     } catch (e) {
       // error handling
       // show that bid didnt pass, maybe toast will be good
     }
-  }
+  }, 1000)
 
   const youWinning = session.data?.user?.email === data?.bid?.user?.email
   const isExpired = isJobExpired(job.createdAt)
@@ -101,7 +102,7 @@ function PlaceAbid({ job }: Props) {
           <span className={'btn btn-outline btn-disabled'}>🏁 Ended</span>
         ) : (
           <div className='flex w-full justify-end'>
-            <button className='btn btn-outline btn-warning' disabled={isMutating} onClick={setLowerBid}>
+            <button className='btn btn-outline btn-warning' disabled={isMutating} onClick={debouncedSetLowerBid}>
               Place a bid
             </button>
           </div>
