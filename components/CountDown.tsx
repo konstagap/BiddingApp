@@ -14,10 +14,14 @@ function CountDown({ expiresAt }: Props) {
   })
   const isExpired = Object.values(count).every((v) => v === 0)
 
+  console.log('count', count)
+  console.log('isExpired', isExpired)
+
   useEffect(() => {
     if (isExpired) return
 
     const id: ReturnType<typeof setInterval> = setInterval(() => {
+      if (isExpired) clearInterval(id)
       if (count.s > 0) {
         setCount(() => ({ ...count, s: count.s - 1 }))
       } else if (count.s === 0 && count.m > 0) {
