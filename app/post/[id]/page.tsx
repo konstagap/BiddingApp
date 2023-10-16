@@ -1,7 +1,7 @@
 import { BiddingSection } from '@/components/BiddingSection'
 import CountDown from '@/components/CountDown'
 import { prisma } from '@/lib/db/prisma'
-import { add24Hours, getZeroTimeDate, isJobExpired } from '@/lib/utils'
+import { add24Hours, isJobExpired } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import { ReactNode } from 'react'
 
@@ -46,7 +46,7 @@ export default async function Posting({ params }: Props) {
     },
     {
       label: 'Time left',
-      value: <CountDown expiresAt={isExpired ? getZeroTimeDate() : add24Hours(job.createdAt)} />
+      value: <CountDown expiresAt={job.createdAt} expired={isExpired} />
     },
 
     {

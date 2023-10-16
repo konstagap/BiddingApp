@@ -23,24 +23,22 @@ async function Navbar({}: Props) {
           <div className='dropdown dropdown-end mr-5'>
             <label tabIndex={0} className='btn btn-ghost btn-circle'>
               <div className='indicator'>
-                <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
-                  />
-                </svg>
-                <span className='badge badge-sm indicator-item'>8</span>
+                <button className='text-accent'>
+                  <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'
+                    />
+                  </svg>
+                </button>
               </div>
             </label>
             <div tabIndex={0} className='mt-3 z-[1] card card-compact dropdown-content w-52 bg-slate-600 shadow'>
               <div className='card-body'>
-                <span className='font-bold text-lg'>8 Items</span>
-                <span className='text-info'>Subtotal: $999</span>
-                <div className='card-actions'>
-                  <button className='btn btn-primary btn-block'>View cart</button>
-                </div>
+                <span className='font-bold text-lg'>TODO:</span>
+                <span className='text-info'>Keep notifications here</span>
               </div>
             </div>
           </div>
@@ -71,7 +69,7 @@ async function Navbar({}: Props) {
             ) : (
               <>
                 <p className='flex w-full justify-center p-3'>
-                  <span className='badge badge-accent badge-outline'>Welcome {user.email}</span>
+                  <span className='badge badge-accent badge-outline'>Change role</span>
                 </p>
                 <RoleSwitch />
                 <li>

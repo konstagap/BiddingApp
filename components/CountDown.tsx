@@ -1,5 +1,6 @@
 'use client'
 import { cn } from '@/lib/tw-merge'
+import { getHourDiff } from '@/lib/utils'
 import React, { memo, useEffect, useState } from 'react'
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
 
 function CountDown({ expiresAt, expired = false }: Props) {
   const [count, setCount] = useState({
-    h: expired ? 0 : expiresAt.getHours(),
+    h: expired ? 0 : getHourDiff(expiresAt),
     m: expired ? 0 : expiresAt.getMinutes(),
     s: expired ? 0 : expiresAt.getSeconds()
   })
@@ -35,7 +36,7 @@ function CountDown({ expiresAt, expired = false }: Props) {
 
   return (
     <span className={cn('countdown font-mono text-2xl', { 'text-error': isExpired })}>
-      <span style={{ '--value': count.h } as React.CSSProperties}></span>h<span style={{ '--value': count.m } as React.CSSProperties}></span>m
+      <span style={{ '--value': count.h } as React.CSSProperties}> </span>h<span style={{ '--value': count.m } as React.CSSProperties}></span>m
       <span style={{ '--value': count.s } as React.CSSProperties}></span>s
     </span>
   )

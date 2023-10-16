@@ -27,8 +27,22 @@ export const isJobExpired = (createdAt: Date) => {
 export function add24Hours(date: Date | string) {
   const newDate = new Date(date)
   newDate.setHours(newDate.getHours() + 24)
-
   return newDate
+}
+
+export const getHourDiff = (date: Date) => {
+  const recordCreationDate = new Date(date)
+
+  // add 24 hours to the record creation date
+  recordCreationDate.setHours(recordCreationDate.getHours() + 24)
+
+  // calculate the difference between the current time and the updated record creation date
+  // @ts-ignore
+  const timeDifference = recordCreationDate - new Date()
+
+  // convert milliseconds to hours
+  const hours = Math.floor(timeDifference / 1000 / 60 / 60)
+  return hours
 }
 
 export const getZeroTimeDate = () => {

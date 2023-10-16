@@ -1,6 +1,6 @@
 import { cn } from '@/lib/tw-merge'
 import type { JobPost } from '@/lib/types'
-import { add24Hours, getZeroTimeDate, isJobExpired } from '@/lib/utils'
+import { isJobExpired } from '@/lib/utils'
 import Link from 'next/link'
 import CountDown from './CountDown'
 
@@ -41,7 +41,7 @@ const Table = ({ items, heading, showBids, classsName = 'border-cyan-400' }: Pro
                 <td>{ts(job.contact)}</td>
                 <td>{ts(job.description)}</td>
                 <td>
-                  <CountDown expiresAt={add24Hours(job.createdAt)} expired={isJobExpired(job.createdAt)} />
+                  <CountDown expiresAt={job.createdAt} expired={isJobExpired(job.createdAt)} />
                 </td>
                 <td>
                   <Link href={`/post/${job.id}`} className='btn btn-active btn-link'>
