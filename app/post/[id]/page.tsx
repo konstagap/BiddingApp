@@ -92,6 +92,6 @@ export default async function Posting({ params }: Props) {
 const DetailsRow = ({ label, value, custom = false }: { label: ReactNode; value: ReactNode; custom?: boolean }) => (
   <div className='px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0'>
     <dt className='text-sm font-medium leading-6 '>{label}</dt>
-    {custom ? value : <dd className='mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 break-words max-h-40 overflow-y-scroll'>{value}</dd>}
+    {custom ? value : <dd className='mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 break-words max-h-40 overflow-y-auto'>{value}</dd>}
   </div>
 )
