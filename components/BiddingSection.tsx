@@ -87,10 +87,10 @@ function PlaceAbid({ job }: Props) {
           <span className='font-medium text-accent '>$ {lowestBid}</span>
         </div>
       </li>
-      <li className='flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6'>
+      <li className='flex flex-col justify-start gap-2 md:flex-row mditems-center md:justify-between py-4 pl-4 pr-5 text-sm leading-6'>
         <div className='flex w-full justify-start'>
           {youWinning && (
-            <span className={'btn btn-outline btn-success'}>
+            <span className={'btn btn-outline btn-success w-full md:w-fit'}>
               {cn({
                 'You are winning': youWinning && !isExpired,
                 'You won!': youWinning && isExpired
@@ -99,10 +99,10 @@ function PlaceAbid({ job }: Props) {
           )}
         </div>
         {isExpired ? (
-          <span className={'btn btn-outline btn-disabled'}>🏁 Ended</span>
+          <span className={'btn btn-outline btn-disabled w-full md:w-fit'}>🏁 Ended</span>
         ) : (
-          <div className='flex w-full justify-end'>
-            <button className='btn btn-outline btn-warning' disabled={isMutating} onClick={debouncedSetLowerBid}>
+          <div className='flex w-full md:justify-end '>
+            <button className='btn btn-outline btn-warning w-full md:w-fit' disabled={isMutating} onClick={debouncedSetLowerBid}>
               Place a bid
             </button>
           </div>
