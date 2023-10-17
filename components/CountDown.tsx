@@ -1,6 +1,6 @@
 'use client'
 import { cn } from '@/lib/tw-merge'
-import { getHourDiff } from '@/lib/utils'
+import { getTimeDiff } from '@/lib/utils'
 import React, { memo, useEffect, useState } from 'react'
 
 type Props = {
@@ -9,10 +9,9 @@ type Props = {
 }
 
 function CountDown({ expiresAt, expired = false }: Props) {
-  const [count, setCount] = useState({
-    h: expired ? 0 : getHourDiff(expiresAt),
-    m: expired ? 0 : expiresAt.getMinutes(),
-    s: expired ? 0 : expiresAt.getSeconds()
+  const [count, setCount] = useState(() => {
+    const { hours, minutes, seconds } = getTimeDiff(expiresAt)
+    return { h: expired ? 0 : hours, m: expired ? 0 : minutes, s: expired ? 0 : seconds }
   })
 
   const isExpired = expired || Object.values(count).every((v) => v === 0)

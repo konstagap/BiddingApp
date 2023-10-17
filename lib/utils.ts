@@ -30,7 +30,7 @@ export function add24Hours(date: Date | string) {
   return newDate
 }
 
-export const getHourDiff = (date: Date) => {
+export const getTimeDiff = (date: Date) => {
   const recordCreationDate = new Date(date)
 
   // add 24 hours to the record creation date
@@ -39,10 +39,13 @@ export const getHourDiff = (date: Date) => {
   // calculate the difference between the current time and the updated record creation date
   // @ts-ignore
   const timeDifference = recordCreationDate - new Date()
-
+  const timeDifferenceDate = new Date(timeDifference)
   // convert milliseconds to hours
   const hours = Math.floor(timeDifference / 1000 / 60 / 60)
-  return hours
+  const minutes = timeDifferenceDate.getMinutes()
+  const seconds = timeDifferenceDate.getSeconds()
+
+  return { hours, minutes, seconds }
 }
 
 export const getZeroTimeDate = () => {
